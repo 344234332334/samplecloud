@@ -134,30 +134,38 @@ public class InventoryService
                         @QueryParam("shoeid") final Long shoeId)
    {
       LOGGER.info("Received validation request for shoe shoeId={}", shoeId);
-      //Shoe shoe =      ofy().load().type(Shoe.class).id(shoeId).now();
-      //  Result<Shoe> th = ofy().load().type(Shoe.class).id(123L);
-
-      // Retrieve the last 10 visits from the datastore, ordered by timestamp.
-      //   Query<Entity> query = Query.newEntityQueryBuilder().setKind("shoe").
-      //  QueryResults<Entity> results = datastore.run(query);
 
       Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
-      KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
-      Key key = keyFactory.setKind("shoe").newKey(shoeId);
+      Entity entity = null;
+      List<Shoe> shoes = null;
+      if (shoeId != null)
+      {
+         KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
+         Key key = keyFactory.setKind("shoe").newKey(shoeId);
+         entity = datastore.get(key);
+      }
+      else
+      {
+         // Retrieve the last 10 visits from the datastore, ordered by timestamp.
+         Query<Entity> query = Query.newEntityQueryBuilder().setKind("shoe")
+                                    .setOrderBy(StructuredQuery.OrderBy.desc("dateCreated")).setLimit(10).build();
+         QueryResults<Entity> results = datastore.run(query);
 
-      // Record a visit to the datastore, storing the IP and timestamp.
-      //  FullEntity<IncompleteKey> curVisit = FullEntity.newBuilder(key)
-      //                                                  .set("user_ip", userIp).set("timestamp", DateTime.now()).build();
-      Entity entity = datastore.get(key);
-
+         shoes = new ArrayList<Shoe>();
+         while (results.hasNext())
+         {
+            Entity temp = results.next();
+            shoes.add(new Shoe(temp));
+         }
+      }
       Response response = null;
       if (entity != null)
       {
          response = Response.status(Status.OK).entity(new Shoe(entity)).build();
       }
-      else
+      else if (shoes != null)
       {
-         response = Response.status(Status.NOT_FOUND).build();
+         response = Response.status(Status.OK).entity(shoes).build();
       }
       return response;
    }

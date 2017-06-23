@@ -74,7 +74,7 @@ public class Shoe {
       id = entity.getKey().getId();
       name = entity.getString("name");
       size = entity.getLong("size");
-
+      dateCreated = entity.getDateTime("dateCreated").toDate();
       description = entity.getString("description");
    }
 
