@@ -10,7 +10,7 @@
 
    <properties>
       <!-- Build configuration -->
-      <project.java.version>1.8</project.java.version>
+      <project.java.version>1.7</project.java.version>
       <maven.compiler.source>${project.java.version}</maven.compiler.source>
       <maven.compiler.target>${project.java.version}</maven.compiler.target>
       <compiler.version>${project.java.version}</compiler.version>
