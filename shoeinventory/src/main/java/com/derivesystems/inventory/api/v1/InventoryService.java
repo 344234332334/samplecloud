@@ -23,7 +23,6 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Result;
-import com.googlecode.objectify.spring.ObjectifyFactoryBean;
 import com.googlecode.objectify.util.Closeable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,12 +75,24 @@ public class InventoryService
    private static final Logger LOGGER = LoggerFactory.getLogger(InventoryService.class);
    final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
    final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
-   ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
 
-   private ObjectifyFactory objectifyFactory = applicationContext.getBean(ObjectifyFactory.class);
+   private ObjectifyFactory objectifyFactory = context.getBean(ObjectifyFactory.class);
+
+
+
    public InventoryService()
    {
       LOGGER.info("constructing " + this.getClass().getName());
+      try
+      {
+   //      objectifyFactory = objectifyFactoryBean.getObject();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+
+
    }
 
    /**

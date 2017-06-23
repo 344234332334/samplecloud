@@ -8,11 +8,5 @@
    <import resource="context-beans-base.xml"/>
    <import resource="context-beans-rest.xml"/>
 
-   <bean class="com.googlecode.objectify.spring.ObjectifyFactoryBean">
-      <property name="classes">
-         <list>
-            <value>com.derivesystems.inventory.model.Shoe</value>
-         </list>
-      </property>
-   </bean>
+
 </beans>
