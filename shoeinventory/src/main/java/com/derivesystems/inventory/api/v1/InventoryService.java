@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,8 +76,9 @@ public class InventoryService
    private static final Logger LOGGER = LoggerFactory.getLogger(InventoryService.class);
    final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
    final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
-   private ObjectifyFactory objectifyFactory = context.getBean(ObjectifyFactory.class);
+   ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
 
+   private ObjectifyFactory objectifyFactory = applicationContext.getBean(ObjectifyFactory.class);
    public InventoryService()
    {
       LOGGER.info("constructing " + this.getClass().getName());
