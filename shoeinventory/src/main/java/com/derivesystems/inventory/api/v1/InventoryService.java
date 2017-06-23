@@ -231,6 +231,7 @@ if(entity!=null)
       LOGGER.info("Received post request for shoe shoe={}", shoe);
       Response response = null;
       Closeable session = ObjectifyService.begin();
+      ObjectifyService.register(Shoe.class);
       if(shoe==null){
          response = Response.status(Status.BAD_REQUEST).build();
       }else
