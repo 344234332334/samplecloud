@@ -19,7 +19,9 @@ import com.google.cloud.datastore.StructuredQuery;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.google.cloud.datastore.StructuredQuery.Filter;
+import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Result;
+import com.googlecode.objectify.util.Closeable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -226,10 +228,9 @@ if(entity!=null)
       response = Shoe.class)
    public Response createShoe(@Context final HttpServletRequest request, Shoe shoe)
    {
-
       LOGGER.info("Received post request for shoe shoe={}", shoe);
       Response response = null;
-
+      Closeable session = ObjectifyService.begin();
       if(shoe==null){
          response = Response.status(Status.BAD_REQUEST).build();
       }else
@@ -238,7 +239,7 @@ if(entity!=null)
          ofy().save().entity(shoe).now();   // synchronous
          response = Response.status(Status.OK).entity(shoe).build();
       }
-
+      session.close();
 
 
       return response;
