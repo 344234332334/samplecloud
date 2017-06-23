@@ -4,6 +4,16 @@ package com.derivesystems.inventory.api.v1;
 import com.derivesystems.inventory.ApplicationInfoService;
 import com.derivesystems.inventory.PasswordSpringConfig;
 import com.derivesystems.inventory.model.ValidationSummary;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.DateTime;
+import com.google.cloud.datastore.Entity;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.KeyFactory;
+import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.QueryResults;
+import com.google.cloud.datastore.StructuredQuery;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,6 +36,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Validate a password using javax validation constraints.
@@ -68,7 +84,57 @@ public class PasswordValidationService
    {
       LOGGER.info("Recieved version request");
 
-      Response response = Response.status(Status.OK).entity(service.getApplicationInfo()).build();
+      // store only the first two octets of a users ip address
+      String userIp = request.getRemoteAddr();
+      InetAddress address = null;
+      Response response = Response.status(Status.INTERNAL_SERVER_ERROR).build();
+      try
+      {
+         address = InetAddress.getByName(userIp);
+
+      if (address instanceof Inet6Address) {
+         // nest indexOf calls to find the second occurrence of a character in a string
+         // an alternative is to use Apache Commons Lang: StringUtils.ordinalIndexOf()
+         userIp = userIp.substring(0, userIp.indexOf(":", userIp.indexOf(":") + 1)) + ":*:*:*:*:*:*";
+      } else if (address instanceof Inet4Address) {
+         userIp = userIp.substring(0, userIp.indexOf(".", userIp.indexOf(".") + 1)) + ".*.*";
+      }
+
+      Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+      KeyFactory keyFactory = datastore.newKeyFactory().setKind("visit");
+      IncompleteKey key = keyFactory.setKind("visit").newKey();
+
+      // Record a visit to the datastore, storing the IP and timestamp.
+      FullEntity<IncompleteKey> curVisit = FullEntity.newBuilder(key)
+                                                     .set("user_ip", userIp).set("timestamp", DateTime.now()).build();
+      datastore.add(curVisit);
+
+      // Retrieve the last 10 visits from the datastore, ordered by timestamp.
+      Query<Entity> query = Query.newEntityQueryBuilder().setKind("visit")
+                                 .setOrderBy(StructuredQuery.OrderBy.desc("timestamp")).setLimit(10).build();
+      QueryResults<Entity> results = datastore.run(query);
+
+     // resp.setContentType("text/plain");
+    //  PrintWriter out = resp.getWriter();
+    //  out.print("Last 10 visits:\n");
+         List<String> visits = new ArrayList<String>();
+      while (results.hasNext()) {
+         Entity entity = results.next();
+        // out.format("Time: %s Addr: %s\n", entity.getDateTime("timestamp"),
+      //              entity.getString("user_ip"));
+         visits.add(String.format("Time: %s Addr: %s\n", entity.getDateTime("timestamp"),
+                                  entity.getString("user_ip")));
+
+      }
+
+
+      response = Response.status(Status.OK).entity(visits).build();
+
+      }
+      catch (UnknownHostException e)
+      {
+         e.printStackTrace();
+      }
       return response;
    }
 

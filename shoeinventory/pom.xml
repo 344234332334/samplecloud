@@ -16,7 +16,7 @@
       <compiler.version>${project.java.version}</compiler.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
+      <objectify.version>5.1.5</objectify.version>
       <springFrameworkVersion>4.3.7.RELEASE</springFrameworkVersion>
       <slf4jVersion>1.7.24</slf4jVersion>
       <log4j2Version>2.8.2</log4j2Version>
@@ -157,11 +157,20 @@
          <artifactId>guava</artifactId>
          <version>21.0</version>
       </dependency>
-
+      <dependency>
+         <groupId>com.googlecode.objectify</groupId>
+         <artifactId>objectify</artifactId>
+         <version>${objectify.version}</version>
+      </dependency>
       <dependency>
          <groupId>com.google.code.findbugs</groupId>
          <artifactId>jsr305</artifactId>
          <version>3.0.1</version>
+      </dependency>
+      <dependency>
+         <groupId>com.google.cloud</groupId>
+         <artifactId>google-cloud-datastore</artifactId>
+         <version>0.13.0-beta</version>
       </dependency>
       <!-- =============== Validation =============== -->
 
