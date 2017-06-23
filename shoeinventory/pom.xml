@@ -16,7 +16,7 @@
       <compiler.version>${project.java.version}</compiler.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <objectify.version>5.1.5</objectify.version>
+      <objectify.version>5.1.17</objectify.version>
       <springFrameworkVersion>4.3.7.RELEASE</springFrameworkVersion>
       <slf4jVersion>1.7.24</slf4jVersion>
       <log4j2Version>2.8.2</log4j2Version>
@@ -152,11 +152,11 @@
       </dependency>
 
 
-      <dependency>
+ <!--     <dependency>
          <groupId>com.google.guava</groupId>
          <artifactId>guava</artifactId>
          <version>20.0</version>
-      </dependency>
+      </dependency> -->
       <dependency>
          <groupId>com.googlecode.objectify</groupId>
          <artifactId>objectify</artifactId>
@@ -171,6 +171,11 @@
          <groupId>com.google.cloud</groupId>
          <artifactId>google-cloud-datastore</artifactId>
          <version>0.13.0-beta</version>
+      </dependency>
+      <dependency>
+         <groupId>com.google.appengine</groupId>
+         <artifactId>appengine-api-1.0-sdk</artifactId>
+         <version>1.9.54</version>
       </dependency>
       <!-- =============== Validation =============== -->
 
@@ -391,6 +396,13 @@
                <version>2.2</version>
                <!-- nothing here -->
             </plugin>
+
+            <plugin>
+               <groupId>com.google.appengine</groupId>
+               <artifactId>appengine-maven-plugin</artifactId>
+               <version>1.9.54</version>
+            </plugin>
+
             <!--       <plugin>
                       <artifactId>maven-assembly-plugin</artifactId>
                       <configuration>
@@ -417,7 +429,10 @@
          </plugins>
 
       </pluginManagement>
-      <plugins>            <plugin>
+      <plugins>
+
+
+         <plugin>
          <groupId>org.apache.maven.plugins</groupId>
          <artifactId>maven-shade-plugin</artifactId>
          <executions>

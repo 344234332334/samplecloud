@@ -206,9 +206,15 @@ public class InventoryService
    //                                                  .set("user_ip", userIp).set("timestamp", DateTime.now()).build();
       Entity entity = datastore.get(key);
 
+      Response response = null;
+if(entity!=null)
+{
 
-
-      Response response = Response.status(Status.OK).entity(entity.toString()).build();
+   response = Response.status(Status.OK).entity(entity.toString()).build();
+}else
+{
+   response = Response.status(Status.NOT_FOUND).build();
+}
       return response;
    }
 
@@ -222,7 +228,7 @@ public class InventoryService
    {
 
       LOGGER.info("Received post request for shoe shoe={}", shoe);
-      Response response = Response.status(Status.OK).entity(new ValidationSummary()).build();
+      Response response = null;
 
       if(shoe==null){
          response = Response.status(Status.BAD_REQUEST).build();
