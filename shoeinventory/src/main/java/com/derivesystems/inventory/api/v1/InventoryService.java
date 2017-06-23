@@ -3,6 +3,7 @@ package com.derivesystems.inventory.api.v1;
 
 import com.derivesystems.inventory.ApplicationInfoService;
 import com.derivesystems.inventory.PasswordSpringConfig;
+import com.derivesystems.inventory.model.Shoe;
 import com.derivesystems.inventory.model.ValidationSummary;
 import com.google.cloud.datastore.Datastore;
 import com.google.cloud.datastore.DatastoreOptions;
@@ -10,10 +11,15 @@ import com.google.cloud.datastore.DateTime;
 import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.FullEntity;
 import com.google.cloud.datastore.IncompleteKey;
+import com.google.cloud.datastore.Key;
 import com.google.cloud.datastore.KeyFactory;
 import com.google.cloud.datastore.Query;
 import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery;
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
+import com.google.cloud.datastore.StructuredQuery.Filter;
+import com.googlecode.objectify.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +35,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -47,7 +54,7 @@ import java.util.List;
  * Validate a password using javax validation constraints.
  */
 @Service
-@Path("/validationservice/v1")
+@Path("/inventory/v1")
 @Produces({MediaType.APPLICATION_JSON})
 @Consumes({MediaType.APPLICATION_JSON})
 @Api(value = "PasswordValidationServiceV1", description = "Password Validation")
@@ -57,14 +64,14 @@ import java.util.List;
    @ApiResponse(code = 500, message = "Internal Server Error"),
 
 })
-public class PasswordValidationService
+public class InventoryService
 {
-   private static final Logger LOGGER = LoggerFactory.getLogger(com.derivesystems.inventory.api.v1.PasswordValidationService.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(InventoryService.class);
    final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
    final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
 
 
-   public PasswordValidationService()
+   public InventoryService()
    {
       LOGGER.info("constructing " + this.getClass().getName());
    }
@@ -166,4 +173,72 @@ public class PasswordValidationService
       Response response = Response.status(Status.OK).entity(new ValidationSummary()).build();
       return response;
    }
+
+   /**
+    * Returns a ValidationSummary object which contains whether the password has passed the validation constraints.
+    *
+    * @return Validationsummary containing ncsServiceIds and time based entitlements
+    */
+   @GET
+   @Path("/shoe")
+   @ApiOperation(
+      value = "Returns the results of validation for a password",
+      notes = "Checks whether password is correct size and fits the pattern.",
+      response = Shoe.class)
+   public Response shoe(@Context final HttpServletRequest request,
+
+                            @QueryParam("shoeid") final Long shoeId)
+   {
+      LOGGER.info("Received validation request for shoe shoeId={}", shoeId);
+      //Shoe shoe =      ofy().load().type(Shoe.class).id(shoeId).now();
+    //  Result<Shoe> th = ofy().load().type(Shoe.class).id(123L);
+
+      // Retrieve the last 10 visits from the datastore, ordered by timestamp.
+   //   Query<Entity> query = Query.newEntityQueryBuilder().setKind("shoe").
+    //  QueryResults<Entity> results = datastore.run(query);
+
+      Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+      KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
+      Key key = keyFactory.setKind("shoe").newKey(shoeId);
+
+      // Record a visit to the datastore, storing the IP and timestamp.
+    //  FullEntity<IncompleteKey> curVisit = FullEntity.newBuilder(key)
+   //                                                  .set("user_ip", userIp).set("timestamp", DateTime.now()).build();
+      Entity entity = datastore.get(key);
+
+
+
+      Response response = Response.status(Status.OK).entity(entity.toString()).build();
+      return response;
+   }
+
+   @POST
+   @Path("/shoe")
+   @ApiOperation(
+      value = "Creates a new shoe.",
+      notes = "Creates a new shoe.",
+      response = Shoe.class)
+   public Response createShoe(@Context final HttpServletRequest request, Shoe shoe)
+   {
+
+      LOGGER.info("Received post request for shoe shoe={}", shoe);
+      Response response = Response.status(Status.OK).entity(new ValidationSummary()).build();
+
+      if(shoe==null){
+         response = Response.status(Status.BAD_REQUEST).build();
+      }else
+      {
+
+         ofy().save().entity(shoe).now();   // synchronous
+         response = Response.status(Status.OK).entity(shoe).build();
+      }
+
+
+
+      return response;
+   }
+
+
+
+
 }
