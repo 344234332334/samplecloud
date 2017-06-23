@@ -19,6 +19,8 @@ import com.google.cloud.datastore.StructuredQuery;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import com.google.cloud.datastore.StructuredQuery.Filter;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Result;
 import com.googlecode.objectify.util.Closeable;
@@ -29,6 +31,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +74,8 @@ public class InventoryService
    private static final Logger LOGGER = LoggerFactory.getLogger(InventoryService.class);
    final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
    final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
-
+   @Autowired
+   private ObjectifyFactory objectifyFactory;
 
    public InventoryService()
    {
@@ -230,18 +234,17 @@ if(entity!=null)
    {
       LOGGER.info("Received post request for shoe shoe={}", shoe);
       Response response = null;
-      Closeable session = ObjectifyService.begin();
+      Objectify objectify = objectifyFactory.begin();
       if(shoe==null){
          response = Response.status(Status.BAD_REQUEST).build();
       }else
       {
 
-         ofy().save().entity(shoe).now();   // synchronous
+         objectify.save().entity(shoe).now();   // synchronous
          response = Response.status(Status.OK).entity(shoe).build();
       }
-      session.close();
 
-
+objectify.flush();
       return response;
    }
 
