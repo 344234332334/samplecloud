@@ -1,5 +1,7 @@
 package com.derivesystems.inventory;
 
+import com.derivesystems.inventory.model.Shoe;
+import com.googlecode.objectify.ObjectifyService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -53,6 +55,9 @@ public class Application implements ApplicationContextAware
          final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
          final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
          final String version = service.getApplicationVersion();
+
+
+
          LOGGER.info("running passwordService Version={}", version);
 
          LOGGER.info("password server successfully started");
