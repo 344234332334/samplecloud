@@ -207,7 +207,7 @@ public class InventoryService
       response = Shoe.class)
    public Response shoe(@Context final HttpServletRequest request,
 
-                            @QueryParam("id") final Long id)
+                            @QueryParam("shoeid") final Long shoeId)
    {
       LOGGER.info("Received validation request for shoe shoeId={}", shoeId);
       //Shoe shoe =      ofy().load().type(Shoe.class).id(shoeId).now();
@@ -219,16 +219,8 @@ public class InventoryService
 
       Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
       KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
-      // Retrieve the last 10 visits from the datastore, ordered by timestamp.
-      Query<Entity> query = Query.newEntityQueryBuilder().setKind("shoe").setFilter(new Filter()
-      {
-         @Override
-         public int hashCode()
-         {
-            return super.hashCode();
-         }
-      })
-                                 .setOrderBy(StructuredQuery.OrderBy.desc("timestamp")).setLimit(10).build();
+      Key key = keyFactory.setKind("shoe").newKey(shoeId);
+
       // Record a visit to the datastore, storing the IP and timestamp.
     //  FullEntity<IncompleteKey> curVisit = FullEntity.newBuilder(key)
    //                                                  .set("user_ip", userIp).set("timestamp", DateTime.now()).build();
