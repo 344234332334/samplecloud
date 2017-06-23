@@ -19,7 +19,7 @@
          <ref bean="validationOutInterceptor"/>
       </jaxrs:outInterceptors>
       <jaxrs:serviceBeans>
-         <ref bean="passwordValidationServicev1"/>
+         <ref bean="inventoryServicev1"/>
       </jaxrs:serviceBeans>
       <jaxrs:providers>
          <ref bean="customJacksonJaxbJsonProvider"/>

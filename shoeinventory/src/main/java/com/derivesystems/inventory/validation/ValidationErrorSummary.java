@@ -12,9 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class representing the entitlement information sent to ETP through either
- * the REST service or notification. This object is marshaled to JSON before
- * being sent and therefore determines the format of the REST payload.
+ * Class representing the errors from validation
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

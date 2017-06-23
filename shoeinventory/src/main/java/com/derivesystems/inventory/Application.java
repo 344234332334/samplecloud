@@ -1,7 +1,5 @@
 package com.derivesystems.inventory;
 
-import com.derivesystems.inventory.model.Shoe;
-import com.googlecode.objectify.ObjectifyService;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -36,7 +34,7 @@ public class Application implements ApplicationContextAware
       LOGGER.info("constructing and loading spring application context");
       ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:context-passwords.xml");
       LOGGER.info("loaded spring application context");
-      Application thisApp = applicationContext.getBean("passwordApp", Application.class);
+      Application thisApp = applicationContext.getBean("shoeInventoryApp", Application.class);
 
       thisApp.start();
    }
@@ -50,17 +48,17 @@ public class Application implements ApplicationContextAware
    {
       try
       {
-         LOGGER.info("starting up password validation server");
+         LOGGER.info("starting up shoe inventory server");
 
-         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
+         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(InventorySpringConfig.class);
          final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
          final String version = service.getApplicationVersion();
 
 
 
-         LOGGER.info("running passwordService Version={}", version);
+         LOGGER.info("running shoeInventory Version={}", version);
 
-         LOGGER.info("password server successfully started");
+         LOGGER.info("inventory server successfully started");
       }
       catch (final Exception e)
       {

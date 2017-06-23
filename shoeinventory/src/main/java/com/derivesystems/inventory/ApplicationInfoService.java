@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@PropertySource("classpath:passwordservice.version.properties")
+@PropertySource("classpath:inventoryservice.version.properties")
 public final class ApplicationInfoService
 {
    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationInfoService.class);
@@ -31,7 +31,7 @@ public final class ApplicationInfoService
 
    public String getApplicationVersion()
    {
-      String applicationVersion = this.environment.getProperty("passwordValidation.version");
+      String applicationVersion = this.environment.getProperty("inventoryService.version");
       LOGGER.debug("retrieved application version={}", applicationVersion);
 
       return applicationVersion;

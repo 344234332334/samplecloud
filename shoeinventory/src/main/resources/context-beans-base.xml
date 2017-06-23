@@ -10,5 +10,5 @@
 
    <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-   <bean id="passwordValidationServicev1" class="com.derivesystems.inventory.api.v1.InventoryService"/>
+   <bean id="inventoryServicev1" class="com.derivesystems.inventory.api.v1.InventoryService"/>
 </beans>
