@@ -219,7 +219,7 @@ public class InventoryService
 
       Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
       KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
-      Key key = keyFactory.setKind("shoe").newKey(shoeId);
+      Key key = keyFactory.newKey(shoeId);
 
       // Record a visit to the datastore, storing the IP and timestamp.
     //  FullEntity<IncompleteKey> curVisit = FullEntity.newBuilder(key)
