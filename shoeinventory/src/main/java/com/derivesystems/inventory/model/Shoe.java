@@ -48,7 +48,7 @@ public class Shoe {
    //@Parent Key<Guestbook> theBook;
    @Id public Long id;
    public String name;
-   public int size;
+   public Long size;
    public String description;
    public Date dateCreated;
 
@@ -62,7 +62,7 @@ public class Shoe {
    /**
     * A convenience constructor
     **/
-   public Shoe(String name, int size, String description) {
+   public Shoe(String name, Long size, String description) {
       this();
       this.name = name;
       this.size = size;
@@ -70,6 +70,13 @@ public class Shoe {
 
    }
 
+   public Shoe(com.google.cloud.datastore.Entity  entity){
+      id = entity.getKey().getId();
+      name = entity.getString("name");
+      size = entity.getLong("size");
+
+      description = entity.getString("description");
+   }
 
 
 }

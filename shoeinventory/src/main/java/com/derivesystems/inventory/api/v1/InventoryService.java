@@ -230,7 +230,7 @@ public class InventoryService
 if(entity!=null)
 {
 
-   response = Response.status(Status.OK).entity(entity.toString()).build();
+   response = Response.status(Status.OK).entity(new Shoe(entity)).build();
 }else
 {
    response = Response.status(Status.NOT_FOUND).build();
@@ -248,14 +248,22 @@ if(entity!=null)
    {
       LOGGER.info("Received post request for shoe shoe={}", shoe);
       Response response = null;
-      Objectify objectify = objectifyFactory.begin();
+      Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+      KeyFactory keyFactory = datastore.newKeyFactory().setKind("shoe");
+      IncompleteKey key = keyFactory.setKind("shoe").newKey();
+
+      // Record a visit to the datastore, storing the IP and timestamp.
+      FullEntity<IncompleteKey> shoeEntity = FullEntity.newBuilder(key)
+                                                     .set("name", shoe.name).set("description", shoe.description).set("size",shoe.size).build();
+
+      Entity returnedEntity = datastore.add(shoeEntity);
+
       if(shoe==null){
          response = Response.status(Status.BAD_REQUEST).build();
       }else
       {
 
-         objectify.save().entity(shoe).now();   // synchronous
-         response = Response.status(Status.OK).entity(shoe).build();
+         response = Response.status(Status.OK).entity(new Shoe(returnedEntity)).build();
       }
 
       return response;
