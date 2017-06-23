@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://cxf.apache.org/jaxrs
+                           http://cxf.apache.org/schemas/jaxrs.xsd">
+
+   <import resource="context-beans-base.xml"/>
+   <import resource="classpath:META-INF/cxf/cxf.xml" />
+   <import resource="classpath*:META-INF/cxf/cxf-extension-*.xml" />
+
+   <jaxrs:server id="ValidationWebServices" basePackages="com.derivesystems.inventory.api" address="http://localhost:8080">
+      <jaxrs:inInterceptors>
+         <ref bean="validationInInterceptor"/>
+      </jaxrs:inInterceptors>
+      <jaxrs:outInterceptors>
+         <ref bean="validationOutInterceptor"/>
+      </jaxrs:outInterceptors>
+      <jaxrs:serviceBeans>
+         <ref bean="passwordValidationServicev1"/>
+      </jaxrs:serviceBeans>
+      <jaxrs:providers>
+         <ref bean="customJacksonJaxbJsonProvider"/>
+         <ref bean="customValidationExceptionMapper"/>
+      </jaxrs:providers>
+   </jaxrs:server>
+
+   <bean id="validationProvider" class="com.derivesystems.inventory.validation.BeanValidationProvider"/>
+   <bean id="validationInInterceptor" class="org.apache.cxf.jaxrs.validation.JAXRSBeanValidationInInterceptor">
+      <property name="provider" ref="validationProvider"/>
+   </bean>
+   <bean id="validationOutInterceptor" class="org.apache.cxf.jaxrs.validation.JAXRSBeanValidationOutInterceptor">
+      <property name="provider" ref="validationProvider"/>
+   </bean>
+
+   <bean id="customJacksonJaxbJsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
+   <bean id="customValidationExceptionMapper" class="com.derivesystems.inventory.validation.CustomValidationExceptionMapper"/>
+
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Used by every process -->
+<Configuration status="info" name="log4j2.xml" monitorInterval="60">
+
+   <Appenders>
+      <File name="MyFile" fileName="logs/app.log">
+         <PatternLayout>
+            <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+         </PatternLayout>
+      </File>
+      <Async name="Async">
+         <AppenderRef ref="MyFile"/>
+      </Async>
+   </Appenders>
+   <Loggers>
+
+
+      <Logger name="org.springframework" level="debug"/>
+
+      <Root level="info">
+         <AppenderRef ref="Async"/>
+      </Root>
+
+   </Loggers>
+</Configuration>
