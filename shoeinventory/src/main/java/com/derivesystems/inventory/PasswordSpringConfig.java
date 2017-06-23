@@ -22,11 +22,4 @@ public Environment env;
          return new ApplicationInfoService(env);
       }
 
-   @Bean
-   public ObjectifyFactory objectifyFactory() {
-      ObjectifyFactory objectifyFactory =  new ObjectifyFactory();
-      objectifyFactory.register(Shoe.class);
-      return objectifyFactory;
-   }
-
 }

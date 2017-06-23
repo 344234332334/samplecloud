@@ -76,7 +76,8 @@ public class InventoryService
    final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PasswordSpringConfig.class);
    final ApplicationInfoService service = context.getBean(ApplicationInfoService.class);
 
-   private ObjectifyFactory objectifyFactory = context.getBean(ObjectifyFactory.class);
+   @Autowired
+   private ObjectifyFactory objectifyFactory;
 
 
 
@@ -257,7 +258,6 @@ if(entity!=null)
          response = Response.status(Status.OK).entity(shoe).build();
       }
 
-objectify.flush();
       return response;
    }
 
