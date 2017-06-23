@@ -26,7 +26,7 @@ public class Application implements ApplicationContextAware
    {
       // Setup the logger
       final String key = "application";
-      final String application = "passwordservice";
+      final String application = "shoeinventory";
 
       LOGGER.info("using applicationName={}", application);
       List<String> argList = Arrays.asList(args);
