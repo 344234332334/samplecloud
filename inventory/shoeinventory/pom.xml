@@ -281,7 +281,7 @@
         <version>3.1</version>
       </plugin>
 
-      <plugin>
+   <!--   <plugin>
         <artifactId>maven-enforcer-plugin</artifactId>
         <version>1.4.1</version>
         <executions>
@@ -292,11 +292,11 @@
             </goals>
             <configuration>
               <rules>
-         <!--       <requireMavenVersion>
+                <requireMavenVersion>
                   <version>3.3.9</version>
                   <version>3.5</version>
 
-                </requireMavenVersion>-->
+                </requireMavenVersion>
                 <requirePluginVersions>
                    <message>Best Practice is to always define plugin versions!</message>
                    <banLatest>true</banLatest>
@@ -308,8 +308,9 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
 
+-->
+    </plugins>
 
 
 
