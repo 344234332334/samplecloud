@@ -292,9 +292,11 @@
             </goals>
             <configuration>
               <rules>
-                <requireMavenVersion>
+         <!--       <requireMavenVersion>
+                  <version>3.3.9</version>
                   <version>3.5</version>
-                </requireMavenVersion>
+
+                </requireMavenVersion>-->
                 <requirePluginVersions>
                    <message>Best Practice is to always define plugin versions!</message>
                    <banLatest>true</banLatest>
